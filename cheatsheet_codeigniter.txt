@@ -1,0 +1,83 @@
+php spark make:model urut
+php spark make:migration jenis_cuti
+php spark make:migration pegawai
+php spark make:migration level
+
+php spark make:migration user
+php spark make:migration detail_level
+php spark make:migration cuti
+
+dalam add foreign key, nama table jangan pakai (_)
+
+## Query builder
+
+```
+$db      = \Config\Database::connect();
+$builder = $db->table('users');
+$query   = $builder->get();
+$query2  = $builder->getResult();
+```
+
+```
+$db = \Config\Database::connect();
+$builder = $db->table('user');
+$builder->select('*');
+$builder->join('pegawai', 'pegawai.id = user.pegawai_id');
+$query = $builder->get();
+$data = $query->getResult();
+
+return view('user/index', [
+	'data' => $data,
+]);
+
+view/
+$data as $d:
+	$d->nama;
+```
+
+```
+# MODEL SELECT ALL
+public $data;
+
+public function __construct()
+{
+       $this->data = new JenisCuti();
+
+}
+public function index()
+{
+	$data = $this->data->findAll();
+        return view('jenis_cuti/index', [
+            'data' => $data,
+        ]);
+}
+
+# WHERE
+
+
+# JOIN TABLE
+
+# cara 1
+$db = \Config\Database::connect();
+$builder = $db->table('detaillevel');
+$builder->select('detaillevel.id, user.username, level.nama_level');
+$builder->join('level', 'detaillevel.level_id = level.id');
+$builder->join('user', 'detaillevel.user_id = user.id');
+$query = $builder->get();
+$data = $query->getResult();
+# $data = $query->getResultArray(); 	cara lain
+#cara manggil : $data->nama
+
+# cara 2
+$sql = "(SELECT * FROM detaillevel JOIN level ON detaillevel.level_id=level.id JOIN user ON detaillevel.user_id=user.id)";
+# $data = $query->getResult(); cara lain
+$data = $db->query($sql)->getResultArray();
+#cara manggil : $data['nama']
+
+dd($data);
+
+return view('detail_level/index', [
+	'data' => $data,
+]);
+}
+```
