@@ -80,4 +80,31 @@ return view('detail_level/index', [
 	'data' => $data,
 ]);
 }
+
+
+
+===== create View dan UNION =====
+
+
+- CREATE VIEW arus_kas AS (
+	SELECT 
+	a.tgl_pemasukan AS tanggal,
+	a.keterangan AS keterangan,
+	a.nominal AS nominal_pemasukan,
+	0 AS nominal_pengeluaran
+	FROM tb_pemasukan AS a
+)
+UNION
+(
+	SELECT 
+	b.tgl_pengeluaran AS tanggal,
+	b.keterangan AS keterangan,
+	0 AS nominal_pemasukan,
+	b.nominal AS nominal_pengeluran
+	FROM tb_pengeluaran AS b
+);
+
+
+=================================================================
+
 ```
